@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/lteLayout.html}"
+      >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board List</title>
+</head>
+
+<body>
+
+    <div class="container-fluid pt-4 px-4" layout:fragment="content">
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h2 class="mb-3">Board List</h2>
+                <!-- 검색영역 -->
+                <table class="table table-hover board_list">
+                    <colgroup>
+                        <col style="width:7%" />
+                        <col style="width:53%" />
+                        <col style="width:13%" />
+                        <col style="width:20%" />
+                        <col style="width:7%" />
+                      </colgroup>
+                      <thead>
+                        <tr>
+                          <th scope="col" class="text-center">No</th>
+                          <th scope="col" class="text-center">Title</th>
+                          <th scope="col" class="text-center">Writer</th>
+                          <th scope="col" class="text-center">Date</th>
+                          <th scope="col" class="text-center">views</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each="list : ${boardList.list}">
+                          <td class="text-center">[[${list.bno}]]</td>
+                          <td>
+                            <div class="board_title">
+                              <div class="ellipsis">
+                                <a th:href="@{|/board/read/${list.bno}?${pageRequestDTO.link}|}">
+                                  <img th:if="${list.fileName}" th:src="|http://localhost/s_${list.fileName}|" />
+                                  <img th:unless="${list.fileName}" th:src="|http://localhost/noimage.png|" width="80" />
+                                  <span style="margin-left: 5px;">[[${list.title}]]</span>
+                                </a>
+                              </div>
+                              <span>([[${list.replycnt}]])</span>
+                            </div>
+                          </td>
+                          <td class="text-center">[[${list.writer}]]</td>
+                          <td class="text-center">[[${#temporals.format(list.dueDate, 'yyyy-MM-dd')}]]</td>
+                          <td class="text-center">[[${list.viewcnt}]]</td>
+                        </tr>
+                      </tbody>
+                </table>
+                <div class="btn-toolbar" role="toolbar" style="justify-content: center;">
+                    <!--/* paging */-->
+                    <ul class="btn-group me-2 paging" role="group" aria-label="First group">
+                      <li th:if="${boardList.prevBtn}"><a th:href="${boardList.startNum - 1}" class="btn btn-primary"></a></li>
+          
+                      <th:block th:each="i: ${#numbers.sequence(boardList.startNum, boardList.endNum)}">
+                      <li th:class="${boardList.page == i} ? 'active' : ''">
+                        <a th:href="${i}" class="btn btn-primary">[[${i}]]</a>
+                      </li>
+                      </th:block>
+          
+                      <li th:if="${boardList.nextBtn}"><a th:href="${boardList.endNum + 1}" class="btn btn-primary">></a></li>
+                    </ul>
+                  </div>
+                  <div class="button_wrap">
+                    <a href="/board/register" class="btn btn-primary">Register</a>
+                  </div>
+                  </div>
+                  </div>
+
+                  <div class="modal alertModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body">[[${message}]]</div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                </div>
+        </div>
+    </div>
+
+    <script layout:fragment="script" th:inline="javascript"></script>
+
+
+
+</body>
